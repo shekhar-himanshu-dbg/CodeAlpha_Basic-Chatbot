@@ -1,136 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAlpha AI Chatbot</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <title>Basic Chatbot</title>
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #111827, #1e3a8a);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    <link
-        rel="stylesheet"
-        href="../static/css/style.css"
-    >
+        .chat-container {
+            width: 100%;
+            max-width: 650px;
+            height: 700px;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 22px;
+        }
+
+        .status {
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .online {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        #clearChat {
+            border: none;
+            background: rgba(255,255,255,.2);
+            color: white;
+            padding: 9px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #chatMessages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background: #f8fafc;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-top: 150px;
+            color: #475569;
+        }
+
+        .welcome h2 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 18px;
+            gap: 10px;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            line-height: 1.5;
+        }
+
+        .bot-message .bubble {
+            background: white;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .user-message .bubble {
+            background: #2563eb;
+            color: white;
+        }
+
+        .time {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .composer {
+            padding: 18px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 13px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        #messageInput:focus {
+            border-color: #2563eb;
+        }
+
+        #sendButton {
+            width: 50px;
+            border: none;
+            border-radius: 12px;
+            background: #2563eb;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #sendButton:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 90vh;
+            }
+
+            .bubble {
+                max-width: 85%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <main class="app-container">
+<div class="chat-container">
 
-        <!-- Header -->
-        <header class="chat-header">
-
-            <div class="bot-profile">
-
-                <div class="bot-avatar">
-                    🤖
-                </div>
-
-                <div>
-                    <h1>Basic Chatbot</h1>
-
-                    <div class="status">
-                        <span class="status-dot"></span>
-                        Online
-                    </div>
-                </div>
-
+    <header class="header">
+        <div>
+            <h1>🤖 CodeAlpha AI</h1>
+            <div class="status">
+                <span class="online"></span> Online
             </div>
-
-            <button
-                id="clearChat"
-                class="clear-button"
-                title="Clear conversation"
-            >
-                🗑️
-            </button>
-
-        </header>
-
-
-        <!-- Chat Area -->
-        <section
-            id="chatMessages"
-            class="chat-messages"
-            aria-live="polite"
-        >
-
-            <div class="message bot-message">
-
-                <div class="message-avatar">
-                    🤖
-                </div>
-
-                <div class="message-content">
-
-                    <div class="message-bubble">
-                        Hello! 👋 I'm your rule-based chatbot.
-                        How can I help you today?
-                    </div>
-
-                    <span class="message-time">
-                        Just now
-                    </span>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Typing Indicator -->
-        <div
-            id="typingIndicator"
-            class="typing-indicator hidden"
-        >
-            <span></span>
-            <span></span>
-            <span></span>
-            Bot is typing...
         </div>
 
+        <button id="clearChat">Clear</button>
+    </header>
 
-        <!-- Input Area -->
-        <footer class="chat-input-area">
-
-            <form id="chatForm">
-
-                <input
-                    id="messageInput"
-                    type="text"
-                    placeholder="Type your message..."
-                    autocomplete="off"
-                    maxlength="500"
-                >
-
-                <button
-                    id="sendButton"
-                    type="submit"
-                    aria-label="Send message"
-                >
-                    ➤
-                </button>
-
-            </form>
-
-            <p class="hint">
-                Press Enter to send • Type "help" for commands
-            </p>
-
-        </footer>
-
+    <main id="chatMessages">
+        <div class="welcome" id="welcome">
+            <h2>Welcome! 👋</h2>
+            <p>I'm a simple rule-based chatbot.</p>
+            <br>
+            <p>Try: <b>hello</b>, <b>how are you</b>, <b>time</b>, <b>date</b>, <b>help</b></p>
+        </div>
     </main>
 
+    <form class="composer" id="chatForm">
+        <input
+            id="messageInput"
+            type="text"
+            placeholder="Type your message..."
+            autocomplete="off"
+        >
 
-    <script
-        src="script.js"
-    ></script>
+        <button id="sendButton" type="submit">➤</button>
+    </form>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
-
 </html>
